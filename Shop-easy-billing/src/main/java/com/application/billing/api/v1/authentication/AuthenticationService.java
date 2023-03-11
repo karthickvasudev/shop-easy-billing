@@ -1,19 +1,22 @@
 package com.application.billing.api.v1.authentication;
 
-import com.application.billing.api.v1.authentication.pojo.AuthenticationRequest;
+import com.application.billing.api.v1.authentication.pojo.LoginRequest;
 import com.application.billing.api.v1.authentication.pojo.AuthenticationResponse;
 import com.application.billing.api.v1.authentication.pojo.RegisterRequest;
+import com.application.billing.api.v1.errorresponse.ErrorResponse;
 import com.application.billing.api.v1.user.User;
 import com.application.billing.api.v1.user.UserRepository;
 import com.application.billing.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -40,14 +43,20 @@ public class AuthenticationService {
         return response;
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(LoginRequest request) {
+        Optional<User> userOptional = userRepository.findByEmail(request.getUsername());
+        if (userOptional.isEmpty()) {
+            userOptional = userRepository.findByPhoneNumber(request.getUsername());
+        }
+        User user = userOptional.orElseThrow(() -> {
+            throw new ErrorResponse(HttpStatus.NOT_FOUND, "Invalid username or password");
+        });
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
+                        user.getId(),
                         request.getPassword()
                 )
         );
-        User user = userRepository.findByEmail(request.getUsername()).orElseThrow();
         String token = service.generateToken(new HashMap<>(), user);
         AuthenticationResponse response = new AuthenticationResponse();
         response.setToken(token);

@@ -23,7 +23,7 @@ public class ApplicationSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> repository.findByEmail(username)
+        return userId -> repository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 

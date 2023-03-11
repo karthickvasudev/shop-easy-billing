@@ -1,6 +1,6 @@
 package com.application.billing.api.v1.authentication;
 
-import com.application.billing.api.v1.authentication.pojo.AuthenticationRequest;
+import com.application.billing.api.v1.authentication.pojo.LoginRequest;
 import com.application.billing.api.v1.authentication.pojo.AuthenticationResponse;
 import com.application.billing.api.v1.authentication.pojo.RegisterRequest;
 import lombok.AllArgsConstructor;
@@ -24,7 +24,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 

@@ -1,5 +1,6 @@
 package com.application.billing.api.v1.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,8 +29,11 @@ public class User implements UserDetails {
     private String email;
     @Indexed(unique = true)
     private String phoneNumber;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private ApplicationRole applicationRole;
+    private Boolean isInvite;
+    private Boolean isProfileUpdated;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -43,7 +47,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return id;
     }
 
     @Override

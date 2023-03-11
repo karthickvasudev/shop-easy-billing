@@ -7,5 +7,4 @@ public class CreateCompanyBody
 {
 
     private String name;
-    private String ownerId;
 }
