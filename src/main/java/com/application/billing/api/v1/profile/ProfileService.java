@@ -3,6 +3,7 @@ package com.application.billing.api.v1.profile;
 import com.application.billing.Utils.CurrentUserDetails;
 import com.application.billing.api.v1.company.Company;
 import com.application.billing.api.v1.company.CompanyRepository;
+import com.application.billing.api.v1.company.CompanyService;
 import com.application.billing.api.v1.errorresponse.ErrorResponse;
 import com.application.billing.api.v1.profile.pojo.ProfileResponse;
 import com.application.billing.api.v1.user.User;
@@ -21,6 +22,8 @@ public class ProfileService {
     private final UserRepository repository;
     private final CurrentUserDetails currentUserDetails;
     private final CompanyRepository companyRepository;
+    private final CompanyService companyService;
+
 
     public ProfileResponse getUserProfile() {
         Optional<User> user = repository.findById(currentUserDetails.getId());
@@ -50,6 +53,8 @@ public class ProfileService {
         profileResponse.setCompany(optionalCompany.orElse(null));
         profileResponse.setIsInvite(user.getIsInvite());
         profileResponse.setIsProfileUpdated(user.getIsProfileUpdated());
+        Company company = companyService.getCompany(user.getId());
+        profileResponse.setCompany(company);
         log.info("profile response : {}", profileResponse);
         return profileResponse;
     }

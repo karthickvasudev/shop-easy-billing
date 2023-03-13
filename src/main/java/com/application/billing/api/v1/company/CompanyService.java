@@ -2,6 +2,7 @@ package com.application.billing.api.v1.company;
 
 import com.application.billing.Utils.CurrentUserDetails;
 import com.application.billing.api.v1.branch.Branch;
+import com.application.billing.api.v1.branch.BranchRepository;
 import com.application.billing.api.v1.branch.BranchService;
 import com.application.billing.api.v1.company.pojo.CreateCompanyBody;
 import com.application.billing.api.v1.company.pojo.UpdateCompanyBody;
@@ -23,9 +24,11 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
     private final BranchService branchService;
+
+    private final BranchRepository branchRepository;
     private final CurrentUserDetails currentUserDetails;
 
-    public Company createCompany(CreateCompanyBody createCompanyBody) {
+    public Company createCompanyAndHomeBranch(CreateCompanyBody createCompanyBody) {
         Optional<User> userOptional = userRepository.findById(currentUserDetails.getId());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -37,6 +40,14 @@ public class CompanyService {
                 company.setActive(true);
                 company.setCreatedOn(LocalDateTime.now());
                 Company save = companyRepository.save(company);
+
+                Branch branch = new Branch();
+                branch.setId(UUID.randomUUID().toString());
+                branch.setName(createCompanyBody.getHomeBranch().getName());
+                branch.setShortName(createCompanyBody.getHomeBranch().getShortName());
+                branch.setCompanyId(company.getId());
+                branch.setCreatedOn(LocalDateTime.now());
+                branchRepository.save(branch);
 
                 user.setIsInvite(false);
                 userRepository.save(user);

@@ -13,7 +13,7 @@ public class CompanyController {
 
     @PostMapping("create")
     public Company createCompany(@RequestBody CreateCompanyBody createCompanyBody) {
-        return service.createCompany(createCompanyBody);
+        return service.createCompanyAndHomeBranch(createCompanyBody);
     }
 
     @GetMapping("{ownerId}")

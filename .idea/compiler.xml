@@ -7,15 +7,18 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="Shop easy billing" />
         <module name="Shop-easy-billing" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="Shop easy billing" target="17" />
       <module name="Shop-easy-billing" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Shop easy billing" options="-parameters" />
       <module name="Shop-easy-billing" options="-parameters" />
     </option>
   </component>
