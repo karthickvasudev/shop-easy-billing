@@ -3,6 +3,8 @@ package com.application.billing.api.v1.startup;
 import com.application.billing.Utils.CommonUtils;
 import com.application.billing.Utils.CurrentUserDetails;
 import com.application.billing.api.v1.errorresponse.ErrorResponse;
+import com.application.billing.api.v1.profile.ProfileService;
+import com.application.billing.api.v1.profile.pojo.ProfileResponse;
 import com.application.billing.api.v1.startup.pojo.UpdateProfileBody;
 import com.application.billing.api.v1.startup.pojo.InviteBody;
 import com.application.billing.api.v1.user.ApplicationRole;
@@ -23,6 +25,7 @@ public class InviteService {
     private final CommonUtils commonUtils;
     private final PasswordEncoder encoder;
     private final CurrentUserDetails currentUserDetails;
+    private final ProfileService service;
 
     public Map<String, String> inviteOwner(InviteBody body) {
         String invitePassword = commonUtils.generateRandomString(7);
@@ -38,7 +41,7 @@ public class InviteService {
         return Map.of("invitePassword", invitePassword);
     }
 
-    public User updateUserProfileForInvite(UpdateProfileBody body) {
+    public ProfileResponse updateUserProfileForInvite(UpdateProfileBody body) {
         Optional<User> userOptional = userRepository.findById(currentUserDetails.getId());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -46,7 +49,7 @@ public class InviteService {
             user.setLastName(body.getLastName());
             user.setPassword(encoder.encode(body.getPassword()));
             user.setIsProfileUpdated(true);
-            return userRepository.save(user);
+            return service.getUserProfileById(user.getId());
         }
         throw new ErrorResponse(HttpStatus.NOT_FOUND, "user not found");
     }

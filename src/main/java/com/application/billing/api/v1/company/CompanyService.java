@@ -24,7 +24,6 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
     private final BranchService branchService;
-
     private final BranchRepository branchRepository;
     private final CurrentUserDetails currentUserDetails;
 
@@ -39,7 +38,7 @@ public class CompanyService {
                 company.setOwnerId(currentUserDetails.getId());
                 company.setActive(true);
                 company.setCreatedOn(LocalDateTime.now());
-                Company save = companyRepository.save(company);
+                companyRepository.save(company);
 
                 Branch branch = new Branch();
                 branch.setId(UUID.randomUUID().toString());
@@ -48,10 +47,11 @@ public class CompanyService {
                 branch.setCompanyId(company.getId());
                 branch.setCreatedOn(LocalDateTime.now());
                 branchRepository.save(branch);
-
                 user.setIsInvite(false);
                 userRepository.save(user);
-                return save;
+
+                company.setBranches(List.of(branch));
+                return getCompanyDetailsWithBranchesByCompanyId(company.getId());
             } else {
                 String errorMsg = !user.getIsInvite() ? "invitation expired" : "profile not updated";
                 throw new ErrorResponse(HttpStatus.NOT_ACCEPTABLE, errorMsg);
@@ -62,7 +62,7 @@ public class CompanyService {
 
     }
 
-    public Company getCompany(String ownerId) {
+    public Company getCompanyByOwnerId(String ownerId) {
         Optional<Company> optionalCompany = companyRepository.findByOwnerId(ownerId);
         if (optionalCompany.isPresent()) {
             Company company = optionalCompany.get();
@@ -84,5 +84,16 @@ public class CompanyService {
             return save;
         }
         throw new RuntimeException("company not found");
+    }
+
+    public Company getCompanyDetailsWithBranchesByCompanyId(String companyId) {
+        Optional<Company> optionalCompany = companyRepository.findById(companyId);
+        if (optionalCompany.isPresent()) {
+            Company company = optionalCompany.get();
+            List<Branch> branchesByCompanyId = branchService.getBranchesByCompanyId(companyId);
+            company.setBranches(branchesByCompanyId);
+            return company;
+        }
+        throw new RuntimeException("Company not found");
     }
 }

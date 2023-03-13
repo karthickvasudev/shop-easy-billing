@@ -1,8 +1,8 @@
 package com.application.billing.api.v1.startup;
 
+import com.application.billing.api.v1.profile.pojo.ProfileResponse;
 import com.application.billing.api.v1.startup.pojo.UpdateProfileBody;
 import com.application.billing.api.v1.startup.pojo.InviteBody;
-import com.application.billing.api.v1.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +20,7 @@ public class InviteController {
     }
 
     @PutMapping("updateProfile")
-    public User updateUserProfileForInvite(@RequestBody UpdateProfileBody body){
+    public ProfileResponse updateUserProfileForInvite(@RequestBody UpdateProfileBody body){
         return service.updateUserProfileForInvite(body);
     }
 }

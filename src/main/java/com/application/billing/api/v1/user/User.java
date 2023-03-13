@@ -34,6 +34,9 @@ public class User implements UserDetails {
     private ApplicationRole applicationRole;
     private Boolean isInvite;
     private Boolean isProfileUpdated;
+    private String companyId;
+    private List<String> branches ;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

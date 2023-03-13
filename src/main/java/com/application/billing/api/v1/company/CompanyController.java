@@ -18,7 +18,7 @@ public class CompanyController {
 
     @GetMapping("{ownerId}")
     public Company getCompany(@PathVariable("ownerId") String ownerId) {
-        return service.getCompany(ownerId);
+        return service.getCompanyByOwnerId(ownerId);
     }
 
     @PutMapping("{Id}")
