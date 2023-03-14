@@ -16,13 +16,13 @@ public class CompanyController {
         return service.createCompanyAndHomeBranch(createCompanyBody);
     }
 
+    @PutMapping("{Id}")
+    public Company updateCompany(@PathVariable("Id") String companyId, @RequestBody UpdateCompanyBody updateCompanyBody)
+    {
+        return service.updateCompany(companyId, updateCompanyBody);
+    }
     @GetMapping("{ownerId}")
     public Company getCompany(@PathVariable("ownerId") String ownerId) {
         return service.getCompanyByOwnerId(ownerId);
-    }
-
-    @PutMapping("{Id}")
-    public Company updateCompany(@PathVariable("Id") String companyId, @RequestBody UpdateCompanyBody updateCompanyBody) {
-        return service.updateCompany(companyId, updateCompanyBody);
     }
 }

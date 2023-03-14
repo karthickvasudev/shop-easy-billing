@@ -24,8 +24,9 @@ public class BranchService {
         return save;
     }
 
-    public List<Branch> getBranchesByCompanyId(String companyId){
+    public List<Branch> getBranchesByCompanyId(String companyId) {
         return branchRepository.findAllByCompanyId(companyId);
+
     }
 
 }
