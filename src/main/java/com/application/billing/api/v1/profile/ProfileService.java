@@ -61,8 +61,12 @@ public class ProfileService {
         if(user.getApplicationRole().equals(ApplicationRole.OWNER)) {
             Optional<Company> optionalCompany = companyRepository.findByOwnerId(user.getId());
             profileResponse.setCompany(optionalCompany.orElse(null));
-            Company company = companyService.getCompanyByOwnerId(user.getId());
-            profileResponse.setCompany(company);
+            try {
+                Company company = companyService.getCompanyByOwnerId(user.getId());
+                profileResponse.setCompany(company);
+            }catch (Exception e){
+
+            }
         }else {
             Company company = companyService.getCompanyDetailsWithBranchesByCompanyId(user.getCompanyId());
             List<Branch> accessedBranches = user.getBranches()
@@ -70,7 +74,6 @@ public class ProfileService {
                     .filter(branch -> branch.getId().equals(branchId)).findFirst().get())
                     .collect(Collectors.toList());
             company.setBranches(accessedBranches);
-
             profileResponse.setCompany(company);
         }
         log.info("profile response : {}", profileResponse);
