@@ -49,6 +49,7 @@ public class InviteService {
             user.setLastName(body.getLastName());
             user.setPassword(encoder.encode(body.getPassword()));
             user.setIsProfileUpdated(true);
+            userRepository.save(user);
             return service.getUserProfileById(user.getId());
         }
         throw new ErrorResponse(HttpStatus.NOT_FOUND, "user not found");
